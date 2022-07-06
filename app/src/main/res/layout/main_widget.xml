@@ -19,24 +19,24 @@
         android:text="Date" />
 
     <TextView
-        android:id="@+id/textViewHighWater"
+        android:id="@+id/textViewHighTide"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/textViewDate"
         android:text="HW: " />
 
     <TextView
-        android:id="@+id/textViewLowWater"
+        android:id="@+id/textViewLowTide"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textViewHighWater"
+        android:layout_below="@+id/textViewHighTide"
         android:text="NW: " />
 
     <ImageView
         android:id="@+id/buttonUpdate"
         android:layout_width="20dp"
         android:layout_height="20dp"
-        android:layout_below="@+id/textViewLowWater"
+        android:layout_below="@+id/textViewLowTide"
         android:src="@color/light_blue_600" />
 
     <TextView
@@ -44,7 +44,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toEndOf="@id/buttonUpdate"
-        android:layout_below="@+id/textViewLowWater"
+        android:layout_below="@+id/textViewLowTide"
         android:text="Last updated: " />
 
 
