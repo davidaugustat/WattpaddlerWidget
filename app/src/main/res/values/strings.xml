@@ -3,4 +3,7 @@
     <string name="appwidget_text">EXAMPLE</string>
     <string name="add_widget">Add widget</string>
     <string name="app_widget_description">This is an app widget description</string>
+    <string name="high_tide_text">HW: %1$s / %2$s</string>
+    <string name="low_tide_text">HW: %1$s / %2$s</string>
+    <string name="last_updated_text">Last updated: %1$s</string>
 </resources>
