@@ -29,6 +29,20 @@ public class TidesInfo {
         this.updatedTime = updatedTime;
     }
 
+    public TidesInfo(Location location, String dateString, String highTide1,
+                     String highTide2, String lowTide1, String lowTide2) {
+        this.locationId = location.getId();
+        this.locationName = location.getName();
+        this.highTide1 = highTide1;
+        this.highTide2 = highTide2;
+        this.lowTide1 = lowTide1;
+        this.lowTide2 = lowTide2;
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        this.date = LocalDate.parse(dateString, formatter);
+        this.updatedTime = LocalDateTime.now();
+    }
+
     public String getLocationId() {
         return locationId;
     }
@@ -69,5 +83,19 @@ public class TidesInfo {
     public String getLastUpdatedTimeFormatted(){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
         return updatedTime.format(formatter);
+    }
+
+    @Override
+    public String toString() {
+        return "TidesInfo{" +
+                "locationId='" + locationId + '\'' +
+                ", locationName='" + locationName + '\'' +
+                ", date=" + date +
+                ", highTide1='" + highTide1 + '\'' +
+                ", highTide2='" + highTide2 + '\'' +
+                ", lowTide1='" + lowTide1 + '\'' +
+                ", lowTide2='" + lowTide2 + '\'' +
+                ", updatedTime=" + updatedTime +
+                '}';
     }
 }
