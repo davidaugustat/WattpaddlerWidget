@@ -85,7 +85,7 @@ public class DataFetcher {
     private TidesInfo tidesInfoStringToObject(Location location, String response) {
         String[] lines = response.split("\n");
         if (lines.length < 4) {
-            throw new IllegalArgumentException("Malformatted response data. Not enough lines.");
+            throw new IllegalArgumentException("Malformed response data. Not enough lines.");
         }
         String[] dayInfos = Arrays.copyOfRange(lines, 1, lines.length - 2);
 
@@ -98,7 +98,7 @@ public class DataFetcher {
         for (String dayInfo : dayInfos) {
             String[] components = dayInfo.split(";");
             if (components.length < 3) {
-                throw new IllegalArgumentException("Malformatted response data. Not columns.");
+                throw new IllegalArgumentException("Malformed response data. Not enough columns.");
             }
             String dateString = components[0].trim();
             String timeString = components[1].trim();
