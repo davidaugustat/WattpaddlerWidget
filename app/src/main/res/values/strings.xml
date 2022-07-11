@@ -9,4 +9,5 @@
 
     <string name="locations_api_url">https://example.com/locations-api/widgetpegel.csv</string>
     <string name="tides_api_url">https://example.com/app-api/?AtPegel=%1$s&amp;AtDate=%2$s</string>
+    <string name="tides_widget_api_url">https://example.com/widget-api/?AtPegel=%1$s&amp;AtDate=%2$s</string>
 </resources>
