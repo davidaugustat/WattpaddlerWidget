@@ -41,7 +41,7 @@ public class DataFetcher {
     }
 
     /**
-     * Fetches the dies data for a single day from the widget API. The API returns all high and
+     * Fetches the tides data for a single day from the widget API. The API returns all high and
      * low tides of the specified day.
      *
      * This method converts the received data into a TidesInfo object which is then provided to
@@ -56,11 +56,32 @@ public class DataFetcher {
                                         Consumer<String> errorAction) {
         String url = String.format(context.getString(R.string.tides_widget_api_url), location.getId(), date);
         getTextFromUrl(url, response -> {
-            TidesInfo tidesInfo = tidesInfoStringToObject(location, response);
-            dataFetchedAction.accept(tidesInfo);
+            try {
+                TidesInfo tidesInfo = tidesInfoStringToObject(location, response);
+                dataFetchedAction.accept(tidesInfo);
+            } catch (IllegalArgumentException e){
+                errorAction.accept("Error: Malformed response from API");
+            }
         }, error -> {
             errorAction.accept(error.getMessage());
         });
+    }
+
+    /**
+     * Fetches the tides data for the current day from the widget API. The API returns all high and
+     * low tides of the current day.
+     *
+     * This method converts the received data into a TidesInfo object which is then provided to
+     * a callback.
+     *
+     * @param location Location of which the tides data should be fetched.
+     * @param dataFetchedAction Gets called as soon as data is available
+     * @param errorAction Gets called in case of a network error.
+     */
+    public void fetchTidesDataSingleDay(Location location, Consumer<TidesInfo> dataFetchedAction,
+                                                    Consumer<String> errorAction){
+        String currentDateString = DateTimeHelper.getCurrentDateInQueryNotation();
+        fetchTidesDataSingleDay(location, currentDateString, dataFetchedAction, errorAction);
     }
 
     /**
