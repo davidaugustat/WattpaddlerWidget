@@ -1,8 +1,11 @@
 package de.davidaugustat.wattpaddlerwidget;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 public class DateTimeHelper {
     public static String getCurrentDateInQueryNotation(){
-        // TODO: Implement this
-        return "2022-07-12";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        return LocalDate.now().format(formatter);
     }
 }
