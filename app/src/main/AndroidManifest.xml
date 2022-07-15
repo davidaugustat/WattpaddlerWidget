@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="de.davidaugustat.wattpaddlerwidget">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -13,6 +15,14 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.WattpaddlerWidget"
         tools:targetApi="31">
+        <activity
+            android:name=".WidgetConfigurationActivity"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
+            </intent-filter>
+        </activity>
+
         <receiver
             android:name=".MainWidget"
             android:exported="false">
@@ -35,7 +45,5 @@
             </intent-filter>
         </activity>
     </application>
-
-    <uses-permission android:name="android.permission.INTERNET"/>
 
 </manifest>
