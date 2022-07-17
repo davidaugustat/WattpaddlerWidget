@@ -6,6 +6,8 @@ import android.content.Context;
 import android.util.Log;
 import android.widget.RemoteViews;
 
+import androidx.annotation.StringRes;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -42,6 +44,22 @@ public class MainWidget extends AppWidgetProvider {
     }
 
     /**
+     * Gets called when one or more app widgets get deleted.
+     *
+     * Deletes the locations associated with these widget(s) from the shared preferences as they
+     * are not needed anymore.
+     *
+     * @param appWidgetIds IDs of the deleted app widgets (in most cases only one widget)
+     */
+    @Override
+    public void onDeleted(Context context, int[] appWidgetIds) {
+        super.onDeleted(context, appWidgetIds);
+        for(int appWidgetId : appWidgetIds){
+            SharedPreferencesHelper.deleteLocation(appWidgetId, context);
+        }
+    }
+
+    /**
      * Loads the data from the API and displays it on the widget.
      *
      * @param views RemoteViews representing the widget
@@ -56,16 +74,22 @@ public class MainWidget extends AppWidgetProvider {
      */
     private static void refreshWidget(RemoteViews views, Context context, AppWidgetManager appWidgetManager, int appWidgetId,
                                       boolean isManualOrInitialUpdate) {
-        new DataFetcher(context).fetchTidesDataSingleDay(getLocation(), tidesInfo -> {
-                    updateWidgetLayout(views, context, appWidgetManager, appWidgetId, tidesInfo);
-                    Log.d("Tides Info", tidesInfo.toString());
-                },
-                errorMessage -> {
-                    if (isManualOrInitialUpdate) {
-                        updateWidgetLayoutAtError(views, context, appWidgetManager, appWidgetId);
-                    }
-                    Log.e("Error fetching tides", errorMessage);
-                });
+        try {
+            Location location = SharedPreferencesHelper.getLocation(appWidgetId, context);
+            new DataFetcher(context).fetchTidesDataSingleDay(location, tidesInfo -> {
+                        updateWidgetLayout(views, context, appWidgetManager, appWidgetId, tidesInfo);
+                        Log.d("Tides Info", tidesInfo.toString());
+                    },
+                    errorMessage -> {
+                        if (isManualOrInitialUpdate) {
+                            updateWidgetLayoutAtError(R.string.no_network_text,views, context, appWidgetManager, appWidgetId);
+                        }
+                        Log.e("Error fetching tides", errorMessage);
+                    });
+        } catch (IllegalArgumentException exception){
+            Log.d("No location", "No location stored for widget ID" + appWidgetId);
+            updateWidgetLayoutAtError(R.string.not_set_up_text, views, context, appWidgetManager, appWidgetId);
+        }
     }
 
     /**
@@ -77,9 +101,9 @@ public class MainWidget extends AppWidgetProvider {
      * @param appWidgetManager AppWidgerManager used to update the widget.
      * @param appWidgetId ID of the widget.
      */
-    private static void updateWidgetLayoutAtError(RemoteViews views, Context context,
+    private static void updateWidgetLayoutAtError(@StringRes int errorStringId, RemoteViews views, Context context,
                                                   AppWidgetManager appWidgetManager, int appWidgetId) {
-        views.setTextViewText(R.id.textViewLocation, context.getString(R.string.no_network_text));
+        views.setTextViewText(R.id.textViewLocation, context.getString(errorStringId));
         appWidgetManager.updateAppWidget(appWidgetId, views);
     }
 
@@ -119,14 +143,6 @@ public class MainWidget extends AppWidgetProvider {
         views.setTextViewText(R.id.textViewLastUpdated, lastUpdatedText);
 
         appWidgetManager.updateAppWidget(appWidgetId, views);
-    }
-
-    /**
-     * Returns the location that the user set when configuring the widget.
-     */
-    private static Location getLocation() {
-        //TODO: Implement this properly
-        return new Location("510P", "Testort");
     }
 
     /**
