@@ -1,10 +1,13 @@
 package de.davidaugustat.wattpaddlerwidget;
 
+import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.widget.RemoteViews;
+import android.widget.Toast;
 
 import androidx.annotation.StringRes;
 
@@ -21,8 +24,11 @@ public class MainWidget extends AppWidgetProvider {
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.main_widget);
 
+        views.setOnClickPendingIntent(R.id.buttonUpdate, getPendingSelfIntent(context, appWidgetId));
+        appWidgetManager.updateAppWidget(appWidgetId, views);
         refreshWidget(views, context, appWidgetManager, appWidgetId, isManualOrInitialRefresh());
-        Log.d("Updating widget", "Updating widget");
+
+        Log.d("Updating widget", "Updating widget with ID " + appWidgetId);
     }
 
     @Override
@@ -143,6 +149,47 @@ public class MainWidget extends AppWidgetProvider {
         views.setTextViewText(R.id.textViewLastUpdated, lastUpdatedText);
 
         appWidgetManager.updateAppWidget(appWidgetId, views);
+    }
+
+    /**
+     * Called when the underlying broadcast receiver of this app widget provider receives an intent.
+     *
+     * This method is used to receive intents that are sent when the refresh button of the widget
+     * is clicked. In this case the widget gets updated.
+     */
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        super.onReceive(context, intent);
+
+        if(intent.getAction().equals(Constants.WIDGET_REFRESH_BUTTON_ACTION)){
+            int appWidgetId = intent.getIntExtra(Constants.APP_WIDGET_ID_EXTRA, Constants.INVALID_APP_WIDGET_ID);
+            Toast.makeText(context, "Update widget" + appWidgetId, Toast.LENGTH_SHORT).show();
+            if(appWidgetId == Constants.INVALID_APP_WIDGET_ID){
+                Log.e("OnReceive", "App widget ID was not passed with intent.");
+                return;
+            }
+            Log.d("Widget onReceive", "Refresh button clicked for widget with ID " + appWidgetId);
+            AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+            updateAppWidget(context, appWidgetManager, appWidgetId);
+        }
+    }
+
+    /**
+     * Returns a PendingIntent that points to this AppWidgetReceiver. When the PendingIntent
+     * is executed, the onReceive() method of this class gets called. This is used to do something
+     * when the refresh button of the widget gets pressed.
+     *
+     * The pending intent includes the Constants.WIDGET_REFRESH_BUTTON_ACTION as well as the app
+     * widget ID of the widget on which the button was pressed.
+     * @param context
+     * @param appWidgetId
+     * @return
+     */
+    private static PendingIntent getPendingSelfIntent(Context context, int appWidgetId) {
+        Intent intent = new Intent(context, MainWidget.class);
+        intent.setAction(Constants.WIDGET_REFRESH_BUTTON_ACTION);
+        intent.putExtra(Constants.APP_WIDGET_ID_EXTRA, appWidgetId);
+        return PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
     /**
