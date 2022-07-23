@@ -4,6 +4,7 @@ import android.content.Context;
 
 import androidx.core.util.Consumer;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -20,6 +21,7 @@ import java.util.List;
 public class DataFetcher {
 
     private final Context context;
+    private final int REQUEST_TIMEOUT_MILLIS = 5000;
 
     public DataFetcher(Context context) {
         this.context = context;
@@ -162,6 +164,10 @@ public class DataFetcher {
                                 Response.ErrorListener errorAction) {
         RequestQueue queue = Volley.newRequestQueue(context);
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, successAction, errorAction);
+        stringRequest.setShouldCache(false);
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(REQUEST_TIMEOUT_MILLIS,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         queue.add(stringRequest);
     }
 
