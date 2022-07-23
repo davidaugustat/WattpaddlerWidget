@@ -34,10 +34,10 @@
 
     <ImageView
         android:id="@+id/buttonUpdate"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:layout_below="@+id/textViewLowTide"
-        android:src="@color/light_blue_600" />
+        android:src="@drawable/ic_refresh" />
 
     <TextView
         android:id="@+id/textViewLastUpdated"
