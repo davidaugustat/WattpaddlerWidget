@@ -82,6 +82,24 @@ public class TidesInfo {
         return DateTimeHelper.getFormattedPreciseDateTime(updatedTime);
     }
 
+    public int getNumberOfHighTides(){
+        if(highTide1 != null && highTide2 != null){
+            return 2;
+        } else if(highTide1 != null) {
+            return 1;
+        }
+        return 0;
+    }
+
+    public int getNumberOfLowTides(){
+        if(lowTide1 != null && lowTide2 != null){
+            return 2;
+        } else if(lowTide1 != null) {
+            return 1;
+        }
+        return 0;
+    }
+
     @Override
     public String toString() {
         return "TidesInfo{" +

@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
 
 /**
@@ -136,26 +137,8 @@ public class MainWidget extends AppWidgetProvider {
                                            TidesInfo tidesInfo) {
         views.setTextViewText(R.id.textViewLocation, tidesInfo.getLocationName());
         views.setTextViewText(R.id.textViewDate, tidesInfo.getDateFormatted());
-
-        String highTideText;
-        if (tidesInfo.getHighTide2Formatted() == null) {
-            highTideText = String.format(context.getString(R.string.high_tide_1_value_text),
-                    tidesInfo.getHighTide1Formatted());
-        } else {
-            highTideText = String.format(context.getString(R.string.high_tide_2_values_text),
-                    tidesInfo.getHighTide1Formatted(), tidesInfo.getHighTide2Formatted());
-        }
-        views.setTextViewText(R.id.textViewHighTide, highTideText);
-
-        String lowTideText;
-        if (tidesInfo.getLowTide2Formatted() == null) {
-            lowTideText = String.format(context.getString(R.string.low_tide_1_value_text),
-                    tidesInfo.getLowTide1Formatted());
-        } else {
-            lowTideText = String.format(context.getString(R.string.low_tide_2_values_text),
-                    tidesInfo.getLowTide1Formatted(), tidesInfo.getLowTide2Formatted());
-        }
-        views.setTextViewText(R.id.textViewLowTide, lowTideText);
+        views.setTextViewText(R.id.textViewHighTide, getHighTidesText(context, tidesInfo));
+        views.setTextViewText(R.id.textViewLowTide, getLowTidesText(context, tidesInfo));
 
         // Show last updated text only for debug purposes:
         if(Constants.SHOW_LAST_UPDATED) {
@@ -166,6 +149,50 @@ public class MainWidget extends AppWidgetProvider {
         }
 
         appWidgetManager.updateAppWidget(appWidgetId, views);
+    }
+
+    /**
+     * Generates string for low tides that can be displayed on the widget.
+     */
+    @NonNull
+    private static String getLowTidesText(Context context, TidesInfo tidesInfo) {
+        String lowTideText = "";
+        switch (tidesInfo.getNumberOfLowTides()){
+            case 2:
+                lowTideText = String.format(context.getString(R.string.low_tides_text),
+                        tidesInfo.getLowTide1Formatted(), tidesInfo.getLowTide2Formatted());
+                break;
+            case 1:
+                lowTideText = String.format(context.getString(R.string.low_tides_text),
+                        tidesInfo.getLowTide1Formatted(), "*");
+                break;
+            case 0:
+                lowTideText = String.format(context.getString(R.string.low_tides_text), "*", "*");
+                break;
+        }
+        return lowTideText;
+    }
+
+    /**
+     * Generates string for high tides that can be displayed on the widget.
+     */
+    @NonNull
+    private static String getHighTidesText(Context context, TidesInfo tidesInfo) {
+        String highTideText = "";
+        switch (tidesInfo.getNumberOfHighTides()){
+            case 2:
+                highTideText = String.format(context.getString(R.string.high_tides_text),
+                    tidesInfo.getHighTide1Formatted(), tidesInfo.getHighTide2Formatted());
+                break;
+            case 1:
+                highTideText = String.format(context.getString(R.string.high_tides_text),
+                        tidesInfo.getHighTide1Formatted(), "*");
+                break;
+            case 0:
+                highTideText = String.format(context.getString(R.string.high_tides_text), "*", "*");
+                break;
+        }
+        return highTideText;
     }
 
     /**
