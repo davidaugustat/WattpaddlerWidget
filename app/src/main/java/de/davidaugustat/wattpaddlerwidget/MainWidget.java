@@ -24,6 +24,7 @@ public class MainWidget extends AppWidgetProvider {
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.main_widget);
 
         views.setOnClickPendingIntent(R.id.buttonUpdate, getPendingSelfIntent(context, appWidgetId));
+        setUpOpenAppOnClick(views, context);
         refreshWidget(views, context, appWidgetManager, appWidgetId, isManualOrInitialRefresh());
 
         Log.d("Updating widget", "Updating widget with ID " + appWidgetId);
@@ -231,7 +232,25 @@ public class MainWidget extends AppWidgetProvider {
         Intent intent = new Intent(context, MainWidget.class);
         intent.setAction(Constants.WIDGET_REFRESH_BUTTON_ACTION);
         intent.putExtra(Constants.APP_WIDGET_ID_EXTRA, appWidgetId);
-        return PendingIntent.getBroadcast(context, appWidgetId, intent, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
+        return PendingIntent.getBroadcast(context, appWidgetId, intent,
+                PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
+    }
+
+    /**
+     * If the Wattpaddler app (com.embarcadero.Wattpaddler) is installed on the device,
+     * the main layout of the widget gets a click listener that opens this app when clicked.
+     */
+    private static void setUpOpenAppOnClick(RemoteViews views, Context context){
+        if(AppPackageDetectionHelper.isWattpaddlerAppInstalled(context)){
+            Intent intent = context.getPackageManager()
+                    .getLaunchIntentForPackage(Constants.WATTPADDLER_APP_PACKAGE_NAME);
+            PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent,
+                    PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+            views.setOnClickPendingIntent(R.id.widgetMainLayout, pendingIntent);
+        } else {
+            Log.d("App not installed", "Wattpaddler app not is installed on the device. " +
+                    "Not setting up a click listener for it.");
+        }
     }
 
     /**

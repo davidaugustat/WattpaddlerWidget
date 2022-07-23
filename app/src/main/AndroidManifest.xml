@@ -44,4 +44,8 @@
         </activity>
     </application>
 
+    <queries>
+        <package android:name="com.embarcadero.Wattpaddler"/>
+    </queries>
+
 </manifest>
