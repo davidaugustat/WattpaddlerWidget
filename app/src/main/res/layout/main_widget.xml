@@ -39,13 +39,13 @@
         android:layout_below="@+id/textViewLowTide"
         android:src="@drawable/ic_refresh" />
 
+<!--    The last updated text view is only displayed in debug mode. -->
     <TextView
         android:id="@+id/textViewLastUpdated"
+        android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toEndOf="@id/buttonUpdate"
-        android:layout_below="@+id/textViewLowTide"
+        android:layout_below="@+id/buttonUpdate"
         android:text="Last updated: " />
-
 
 </RelativeLayout>

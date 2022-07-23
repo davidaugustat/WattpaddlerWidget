@@ -6,6 +6,7 @@ import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
+import android.view.View;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 
@@ -22,7 +23,6 @@ public class MainWidget extends AppWidgetProvider {
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.main_widget);
 
         views.setOnClickPendingIntent(R.id.buttonUpdate, getPendingSelfIntent(context, appWidgetId));
-        appWidgetManager.updateAppWidget(appWidgetId, views);
         refreshWidget(views, context, appWidgetManager, appWidgetId, isManualOrInitialRefresh());
 
         Log.d("Updating widget", "Updating widget with ID " + appWidgetId);
@@ -157,9 +157,13 @@ public class MainWidget extends AppWidgetProvider {
         }
         views.setTextViewText(R.id.textViewLowTide, lowTideText);
 
-        String lastUpdatedText = String.format(context.getString(R.string.last_updated_text),
-                tidesInfo.getLastUpdatedTimeFormatted());
-        views.setTextViewText(R.id.textViewLastUpdated, lastUpdatedText);
+        // Show last updated text only for debug purposes:
+        if(Constants.SHOW_LAST_UPDATED) {
+            String lastUpdatedText = String.format(context.getString(R.string.last_updated_text),
+                    tidesInfo.getLastUpdatedTimeFormatted());
+            views.setTextViewText(R.id.textViewLastUpdated, lastUpdatedText);
+            views.setViewVisibility(R.id.textViewLastUpdated, View.VISIBLE);
+        }
 
         appWidgetManager.updateAppWidget(appWidgetId, views);
     }
@@ -176,7 +180,6 @@ public class MainWidget extends AppWidgetProvider {
 
         if(intent.getAction().equals(Constants.WIDGET_REFRESH_BUTTON_ACTION)){
             int appWidgetId = intent.getIntExtra(Constants.APP_WIDGET_ID_EXTRA, Constants.INVALID_APP_WIDGET_ID);
-            Toast.makeText(context, "Update widget" + appWidgetId, Toast.LENGTH_SHORT).show();
             if(appWidgetId == Constants.INVALID_APP_WIDGET_ID){
                 Log.e("OnReceive", "App widget ID was not passed with intent.");
                 return;
@@ -194,15 +197,14 @@ public class MainWidget extends AppWidgetProvider {
      *
      * The pending intent includes the Constants.WIDGET_REFRESH_BUTTON_ACTION as well as the app
      * widget ID of the widget on which the button was pressed.
-     * @param context
-     * @param appWidgetId
-     * @return
+     * @param appWidgetId ID of the app widget that should be updated when the refresh button is
+     *                    pressed.
      */
     private static PendingIntent getPendingSelfIntent(Context context, int appWidgetId) {
         Intent intent = new Intent(context, MainWidget.class);
         intent.setAction(Constants.WIDGET_REFRESH_BUTTON_ACTION);
         intent.putExtra(Constants.APP_WIDGET_ID_EXTRA, appWidgetId);
-        return PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
+        return PendingIntent.getBroadcast(context, appWidgetId, intent, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
     /**

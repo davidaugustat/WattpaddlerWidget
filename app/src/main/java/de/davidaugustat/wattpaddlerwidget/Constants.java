@@ -7,4 +7,5 @@ public class Constants {
     public static final String WIDGET_REFRESH_BUTTON_ACTION = "WIDGET_REFRESH_BUTTON_ACTION";
     public static final String APP_WIDGET_ID_EXTRA = "APP_WIDGET_ID_EXTRA";
     public static final int INVALID_APP_WIDGET_ID = -1;
+    public static final boolean SHOW_LAST_UPDATED = true;
 }
