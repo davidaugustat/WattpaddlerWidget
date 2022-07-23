@@ -8,17 +8,17 @@ import java.time.format.DateTimeFormatter;
  * Stores the information that is displayed on the widget.
  */
 public class TidesInfo {
-    private String locationId;
-    private String locationName;
-    private LocalDate date;
-    private String highTide1;
-    private String highTide2;
-    private String lowTide1;
-    private String lowTide2;
-    private LocalDateTime updatedTime;
+    private final String locationId;
+    private final String locationName;
+    private final LocalDate date;
+    private final LocalDateTime highTide1;
+    private final LocalDateTime highTide2;
+    private final LocalDateTime lowTide1;
+    private final LocalDateTime lowTide2;
+    private final LocalDateTime updatedTime;
 
-    public TidesInfo(String locationId, String locationName, LocalDate date, String highTide1,
-                     String highTide2, String lowTide1, String lowTide2, LocalDateTime updatedTime) {
+    public TidesInfo(String locationId, String locationName, LocalDate date, LocalDateTime highTide1,
+                     LocalDateTime highTide2, LocalDateTime lowTide1, LocalDateTime lowTide2, LocalDateTime updatedTime) {
         this.locationId = locationId;
         this.locationName = locationName;
         this.date = date;
@@ -33,13 +33,12 @@ public class TidesInfo {
                      String highTide2, String lowTide1, String lowTide2) {
         this.locationId = location.getId();
         this.locationName = location.getName();
-        this.highTide1 = highTide1;
-        this.highTide2 = highTide2;
-        this.lowTide1 = lowTide1;
-        this.lowTide2 = lowTide2;
+        this.highTide1 = DateTimeHelper.parseTidesTimeInCET(dateString, highTide1);
+        this.highTide2 = DateTimeHelper.parseTidesTimeInCET(dateString, highTide2);
+        this.lowTide1 = DateTimeHelper.parseTidesTimeInCET(dateString, lowTide1);
+        this.lowTide2 = DateTimeHelper.parseTidesTimeInCET(dateString, lowTide2);
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        this.date = LocalDate.parse(dateString, formatter);
+        this.date = DateTimeHelper.parseDate(dateString);
         this.updatedTime = LocalDateTime.now();
     }
 
@@ -55,20 +54,20 @@ public class TidesInfo {
         return date;
     }
 
-    public String getHighTide1() {
-        return highTide1;
+    public String getHighTide1Formatted() {
+        return DateTimeHelper.getFormattedTidesTime(highTide1);
     }
 
-    public String getHighTide2() {
-        return highTide2;
+    public String getHighTide2Formatted() {
+        return DateTimeHelper.getFormattedTidesTime(highTide2);
     }
 
-    public String getLowTide1() {
-        return lowTide1;
+    public String getLowTide1Formatted() {
+        return DateTimeHelper.getFormattedTidesTime(lowTide1);
     }
 
-    public String getLowTide2() {
-        return lowTide2;
+    public String getLowTide2Formatted() {
+        return DateTimeHelper.getFormattedTidesTime(lowTide2);
     }
 
     public LocalDateTime getUpdatedTime() {
@@ -76,13 +75,11 @@ public class TidesInfo {
     }
 
     public String getDateFormatted(){
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EE dd.MM.yyyy");
-        return date.format(formatter);
+        return DateTimeHelper.getDateInGermanFormatting(date);
     }
 
     public String getLastUpdatedTimeFormatted(){
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss");
-        return updatedTime.format(formatter);
+        return DateTimeHelper.getFormattedPreciseDateTime(updatedTime);
     }
 
     @Override
