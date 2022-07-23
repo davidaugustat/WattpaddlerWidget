@@ -76,12 +76,12 @@ public class TidesInfo {
     }
 
     public String getDateFormatted(){
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EE dd.MM.yyyy");
         return date.format(formatter);
     }
 
     public String getLastUpdatedTimeFormatted(){
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss");
         return updatedTime.format(formatter);
     }
 
