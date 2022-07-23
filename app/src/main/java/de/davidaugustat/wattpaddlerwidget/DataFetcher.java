@@ -63,7 +63,7 @@ public class DataFetcher {
                 errorAction.accept("Error: Malformed response from API");
             }
         }, error -> {
-            errorAction.accept(error.getMessage());
+            errorAction.accept(error.toString());
         });
     }
 
