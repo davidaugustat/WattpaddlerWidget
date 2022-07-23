@@ -11,9 +11,6 @@ import android.widget.Toast;
 
 import androidx.annotation.StringRes;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-
 /**
  * Implementation of App Widget functionality.
  */
@@ -88,7 +85,8 @@ public class MainWidget extends AppWidgetProvider {
                     },
                     errorMessage -> {
                         if (isManualOrInitialUpdate) {
-                            updateWidgetLayoutAtError(R.string.no_network_text,views, context, appWidgetManager, appWidgetId);
+                            //updateWidgetLayoutAtError(R.string.no_network_text,views, context, appWidgetManager, appWidgetId);
+                            updateWidgetLayoutAtError(errorMessage, views, appWidgetManager, appWidgetId);
                         }
                         Log.e("Error fetching tides", errorMessage);
                     });
@@ -99,9 +97,25 @@ public class MainWidget extends AppWidgetProvider {
     }
 
     /**
-     * Displays a "Network error" message on the widget. This can be used to inform the user about
+     * Displays an message on the widget. This can be used to inform the user about
      * an error that ocurred during update.
      *
+     * @param errorString String for the error message
+     * @param views RemoteViews representing the widget
+     * @param appWidgetManager AppWidgerManager used to update the widget.
+     * @param appWidgetId ID of the widget.
+     */
+    private static void updateWidgetLayoutAtError(String errorString, RemoteViews views,
+                                                  AppWidgetManager appWidgetManager, int appWidgetId) {
+        views.setTextViewText(R.id.textViewLocation, errorString);
+        appWidgetManager.updateAppWidget(appWidgetId, views);
+    }
+
+    /**
+     * Displays an message on the widget. This can be used to inform the user about
+     * an error that ocurred during update.
+     *
+     * @param errorStringId String for the error message
      * @param views RemoteViews representing the widget
      * @param context Context used to get strings
      * @param appWidgetManager AppWidgerManager used to update the widget.
@@ -109,8 +123,7 @@ public class MainWidget extends AppWidgetProvider {
      */
     private static void updateWidgetLayoutAtError(@StringRes int errorStringId, RemoteViews views, Context context,
                                                   AppWidgetManager appWidgetManager, int appWidgetId) {
-        views.setTextViewText(R.id.textViewLocation, context.getString(errorStringId));
-        appWidgetManager.updateAppWidget(appWidgetId, views);
+        updateWidgetLayoutAtError(context.getString(errorStringId), views, appWidgetManager, appWidgetId);
     }
 
     /**
@@ -125,22 +138,22 @@ public class MainWidget extends AppWidgetProvider {
         views.setTextViewText(R.id.textViewDate, tidesInfo.getDateFormatted());
 
         String highTideText;
-        if (tidesInfo.getHighTide2() == null) {
+        if (tidesInfo.getHighTide2Formatted() == null) {
             highTideText = String.format(context.getString(R.string.high_tide_1_value_text),
-                    tidesInfo.getHighTide1());
+                    tidesInfo.getHighTide1Formatted());
         } else {
             highTideText = String.format(context.getString(R.string.high_tide_2_values_text),
-                    tidesInfo.getHighTide1(), tidesInfo.getHighTide2());
+                    tidesInfo.getHighTide1Formatted(), tidesInfo.getHighTide2Formatted());
         }
         views.setTextViewText(R.id.textViewHighTide, highTideText);
 
         String lowTideText;
-        if (tidesInfo.getLowTide2() == null) {
+        if (tidesInfo.getLowTide2Formatted() == null) {
             lowTideText = String.format(context.getString(R.string.low_tide_1_value_text),
-                    tidesInfo.getLowTide1());
+                    tidesInfo.getLowTide1Formatted());
         } else {
             lowTideText = String.format(context.getString(R.string.low_tide_2_values_text),
-                    tidesInfo.getLowTide1(), tidesInfo.getLowTide2());
+                    tidesInfo.getLowTide1Formatted(), tidesInfo.getLowTide2Formatted());
         }
         views.setTextViewText(R.id.textViewLowTide, lowTideText);
 
@@ -198,18 +211,5 @@ public class MainWidget extends AppWidgetProvider {
     private static boolean isManualOrInitialRefresh(){
         // TODO: Implement this properly.
         return true;
-    }
-
-    private static TidesInfo getDummyTidesInfo() {
-        return new TidesInfo(
-                "123214",
-                "Bremerhaven / Alter Leuchtturm",
-                LocalDate.now(),
-                "10:00",
-                "22:30",
-                "16:00",
-                "4:30",
-                LocalDateTime.now()
-        );
     }
 }

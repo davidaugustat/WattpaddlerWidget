@@ -17,6 +17,9 @@ public class DateTimeHelper {
     }
 
     public static LocalDateTime parseTidesTimeInCET(String date, String timeCET){
+        if(date == null || timeCET == null){
+            return null;
+        }
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd H:mm");
         LocalDateTime dateTimeCET = LocalDateTime.parse(date + " " + timeCET, formatter);
         return OffsetDateTime.of(dateTimeCET, CET_OFFSET)
@@ -25,6 +28,9 @@ public class DateTimeHelper {
     }
 
     public static String getFormattedTidesTime(LocalDateTime time){
+        if(time == null){
+            return null;
+        }
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("H:mm");
         return time.format(formatter);
     }
