@@ -16,7 +16,6 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.RemoteViews;
 import android.widget.Toast;
 
 import java.util.List;
@@ -161,5 +160,27 @@ public class WidgetConfigurationActivity extends AppCompatActivity {
         locationsList.setOnItemClickListener((adapterView, view, index, id) -> {
             selectedLocation = locations.get(index);
         });
+
+        setPresetLocationCheckedIfExists(locations);
+    }
+
+    /**
+     * Checks if a location for the current widget has already been configured in a previous setup.
+     * If this is the case, this location is preselected in the list of locations.
+     *
+     * @param locations List of all locations that are displayed in the list.
+     */
+    private void setPresetLocationCheckedIfExists(List<Location> locations) {
+        try {
+            Location presetLocation = SharedPreferencesHelper.getLocation(appWidgetId, this);
+            int index = locations.indexOf(presetLocation);
+            if(index != -1){
+                locationsList.setItemChecked(index, true);
+                selectedLocation = presetLocation;
+            }
+        } catch (IllegalArgumentException exception){
+            // when no location for the widget has been stored yet (i.e. at initial setup), no
+            // action is required.
+        }
     }
 }
