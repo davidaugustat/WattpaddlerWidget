@@ -2,6 +2,7 @@ package de.davidaugustat.wattpaddlerwidget;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.appwidget.AppWidgetManager;
 import android.content.Intent;
@@ -27,8 +28,7 @@ import java.util.stream.Collectors;
  */
 public class WidgetConfigurationActivity extends AppCompatActivity {
 
-    private int appWidgetId;
-    private Location selectedLocation;
+    WidgetConfigurationViewModel viewModel;
 
     private ListView locationsList;
     private ProgressBar progressBar;
@@ -40,16 +40,24 @@ public class WidgetConfigurationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_widget_configuration);
 
-        this.appWidgetId = getAppWidgetId();
-        setResult(RESULT_CANCELED);
-
         locationsList = findViewById(R.id.locations_listview);
         progressBar = findViewById(R.id.config_progressBar);
         errorLayout = findViewById(R.id.config_error_layout);
         retryButton = findViewById(R.id.config_retry_button);
 
-        retryButton.setOnClickListener(view -> loadLocations());
-        loadLocations();
+        viewModel = new ViewModelProvider(this).get(WidgetConfigurationViewModel.class);
+
+        // Result used by Android to decide whether to add widget or not. This value gets changed
+        // when the "done" button has been clicked.
+        setResult(RESULT_CANCELED);
+
+        if(viewModel.getLocations() == null) {
+            viewModel.setAppWidgetId(getAppWidgetId());
+            retryButton.setOnClickListener(view -> loadLocations());
+            loadLocations();
+        } else {
+            setupLocationsList();
+        }
     }
 
     @Override
@@ -79,9 +87,8 @@ public class WidgetConfigurationActivity extends AppCompatActivity {
         errorLayout.setVisibility(View.GONE);
 
         new DataFetcher(this).fetchLocations(locations -> {
-            locationsList.setVisibility(View.VISIBLE);
-            progressBar.setVisibility(View.GONE);
-            setupLocationsList(locations);
+            viewModel.setLocations(locations);
+            setupLocationsList();
         }, errorMessage -> {
             Log.d("Error loading locations", errorMessage);
             progressBar.setVisibility(View.GONE);
@@ -100,15 +107,15 @@ public class WidgetConfigurationActivity extends AppCompatActivity {
      * displayed and nothing else happens.
      */
     private void finishActivitySuccess(){
-        if(selectedLocation == null){
+        if(viewModel.getSelectedLocation() == null){
             Toast.makeText(this, R.string.select_location_text, Toast.LENGTH_SHORT).show();
             return;
         }
 
-        SharedPreferencesHelper.saveLocation(selectedLocation, appWidgetId, this);
+        SharedPreferencesHelper.saveLocation(viewModel.getSelectedLocation(), viewModel.getAppWidgetId(), this);
         updateWidget();
 
-        Intent resultValue = new Intent().putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+        Intent resultValue = new Intent().putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, viewModel.getAppWidgetId());
         setResult(RESULT_OK, resultValue);
         finish();
     }
@@ -119,7 +126,7 @@ public class WidgetConfigurationActivity extends AppCompatActivity {
     private void updateWidget(){
         Intent intent = new Intent(this, MainWidget.class);
         intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, new int [] {appWidgetId});
+        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, new int [] {viewModel.getAppWidgetId()});
         sendBroadcast(intent);
     }
 
@@ -145,12 +152,16 @@ public class WidgetConfigurationActivity extends AppCompatActivity {
      * Additionally sets up an item click listener for this list: When an item is clicked, the
      * selectedLocation field is set to its associated location object.
      *
-     * @param locations Locations to display in the list
+     * Note that the locations list in the viewModel must be loaded already before this method gets
+     * called.
      */
-    private void setupLocationsList(List<Location> locations){
+    private void setupLocationsList(){
+        locationsList.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.GONE);
+
         locationsList.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 
-        List<String> locationNames = locations.stream()
+        List<String> locationNames = viewModel.getLocations().stream()
                 .map(Location::getName)
                 .collect(Collectors.toList());
 
@@ -158,29 +169,36 @@ public class WidgetConfigurationActivity extends AppCompatActivity {
                 android.R.layout.simple_list_item_single_choice, locationNames);
         locationsList.setAdapter(listAdapter);
         locationsList.setOnItemClickListener((adapterView, view, index, id) -> {
-            selectedLocation = locations.get(index);
+            viewModel.setSelectedLocation(viewModel.getLocations().get(index), index);
         });
 
-        setPresetLocationCheckedIfExists(locations);
+        setPresetLocationCheckedIfExists();
     }
 
     /**
-     * Checks if a location for the current widget has already been configured in a previous setup.
-     * If this is the case, this location is preselected in the list of locations.
+     * Checks if a location for the current widget has already been configured in a previous setup
+     * or is already stored in the viewModel. If this is the case, this location is preselected in
+     * the list of locations.
      *
-     * @param locations List of all locations that are displayed in the list.
+     * Note that the locations list in the viewModel must be loaded already before this method gets
+     * called.
      */
-    private void setPresetLocationCheckedIfExists(List<Location> locations) {
-        try {
-            Location presetLocation = SharedPreferencesHelper.getLocation(appWidgetId, this);
-            int index = locations.indexOf(presetLocation);
-            if(index != -1){
-                locationsList.setItemChecked(index, true);
-                selectedLocation = presetLocation;
+    private void setPresetLocationCheckedIfExists() {
+        if(viewModel.getSelectedLocation() == null) {
+            try {
+                Location presetLocation = SharedPreferencesHelper.getLocation(viewModel.getAppWidgetId(), this);
+                int index = viewModel.getLocations().indexOf(presetLocation);
+                if (index != -1) {
+                    viewModel.setSelectedLocation(presetLocation, index);
+                }
+            } catch (IllegalArgumentException exception) {
+                // when no location for the widget has been stored yet (i.e. at initial setup), no
+                // action is required.
             }
-        } catch (IllegalArgumentException exception){
-            // when no location for the widget has been stored yet (i.e. at initial setup), no
-            // action is required.
+        }
+
+        if(viewModel.getSelectedLocation() != null){
+            locationsList.setItemChecked(viewModel.getSelectedLocationIndex(), true);
         }
     }
 }
