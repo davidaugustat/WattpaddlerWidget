@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_widget_description">Zeigt die Gezeiten an einen bestimmten Ort für den aktuellen Tag an.</string>
+    <string name="high_tides_text">HW: %1$s / %2$s</string>
+    <string name="low_tides_text">NW: %1$s / %2$s</string>
+    <string name="last_updated_text">Zul. aktualisiert: %1$s</string>
+    <string name="done_text">Fertig</string>
+    <string name="error_loading_locations_text">Beim Laden der Orte-Liste ist ein Fehler aufgetreten.</string>
+    <string name="retry_text">Erneut versuchen</string>
+    <string name="select_location_text">Bitte zuerst einen Ort auswählen.</string>
+    <string name="not_loaded">Nicht geladen</string>
+    <string name="nw_placeholder">NW:</string>
+    <string name="hw_placeholder">HW:</string>
+    <string name="date_placeholder">Datum</string>
+    <string name="location_placeholder">Ort</string>
+    <string name="last_updated_placeholder">Zul. aktualisiert:</string>
+    <string name="error_updating_toast_text">Beim Aktualisieren ist ein Fehler aufgetreten. Bitte erneut versuchen.</string>
+    <string name="widget_updated_toast_text">Widget wurde aktualisiert.</string>
+    <string name="select_location">Ort auswählen</string>
+</resources>
