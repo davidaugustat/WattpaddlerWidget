@@ -1,14 +1,10 @@
 <resources>
     <string name="app_name">Wattpaddler Widget</string>
-    <string name="appwidget_text">EXAMPLE</string>
     <string name="add_widget">Add widget</string>
-    <string name="app_widget_description">This is an app widget description</string>
+    <string name="app_widget_description">Shows the tides at a location for the current day.</string>
     <string name="high_tides_text">HW: %1$s / %2$s</string>
     <string name="low_tides_text">NW: %1$s / %2$s</string>
     <string name="last_updated_text">Last updated: %1$s</string>
-    <string name="no_network_text">No internet connection.</string>
-    <string name="not_set_up_text">Setup not completed.</string>
-
     <string name="locations_api_url">https://example.com/locations-api/widgetpegel.csv</string>
     <string name="tides_api_url">https://example.com/app-api/?AtPegel=%1$s&amp;AtDate=%2$s</string>
     <string name="tides_widget_api_url">https://example.com/widget-api/?AtPegel=%1$s&amp;AtDate=%2$s</string>
@@ -16,4 +12,14 @@
     <string name="error_loading_locations_text">An error occurred while loading the locations list.</string>
     <string name="retry_text">Retry</string>
     <string name="select_location_text">Please select a location first.</string>
+    <string name="not_loaded">Not loaded</string>
+    <string name="nw_placeholder">NW:</string>
+    <string name="hw_placeholder">HW:</string>
+    <string name="date_placeholder">Date</string>
+    <string name="location_placeholder">Location</string>
+    <string name="wattpaddler">Wattpaddler</string>
+    <string name="last_updated_placeholder">Last updated:</string>
+    <string name="error_updating_toast_text">An error occurred while updating. Please retry.</string>
+    <string name="widget_updated_toast_text">Widget was updated.</string>
+    <string name="select_location">Select a location</string>
 </resources>

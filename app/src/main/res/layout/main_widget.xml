@@ -5,47 +5,86 @@
     android:theme="@style/Theme.WattpaddlerWidget.AppWidgetContainer">
 
 
-    <TextView
-        android:id="@+id/textViewLocation"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Location" />
+    <RelativeLayout
+        android:id="@+id/widgetMainLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/textViewDate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/textViewLocation"
-        android:text="Date" />
+        <LinearLayout
+            android:id="@+id/widgetInfoLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
 
-    <TextView
-        android:id="@+id/textViewHighTide"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/textViewDate"
-        android:text="HW: " />
+            <TextView
+                android:id="@+id/textViewLocation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/location_placeholder"
+                android:textStyle="bold"/>
 
-    <TextView
-        android:id="@+id/textViewLowTide"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/textViewHighTide"
-        android:text="NW: " />
+            <TextView
+                android:id="@+id/textViewDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/date_placeholder" />
 
-    <ImageView
-        android:id="@+id/buttonUpdate"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_below="@+id/textViewLowTide"
-        android:src="@drawable/ic_refresh" />
+            <TextView
+                android:id="@+id/textViewHighTide"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/hw_placeholder" />
+
+            <TextView
+                android:id="@+id/textViewLowTide"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/nw_placeholder" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/textViewStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/not_loaded"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"/>
+
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/widgetBottomLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_alignParentBottom="true">
+
+        <ImageView
+            android:id="@+id/buttonUpdate"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/ic_refresh"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"/>
+
+        <TextView
+            android:id="@+id/textViewWattpaddler"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/wattpaddler"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"/>
+    </RelativeLayout>
 
 <!--    The last updated text view is only displayed in debug mode. -->
     <TextView
-        android:id="@+id/textViewLastUpdated"
+        android:id="@+id/textViewDebug"
         android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/buttonUpdate"
-        android:text="Last updated: " />
+        android:layout_below="@+id/widgetBottomLayout"
+        android:text="@string/last_updated_placeholder" />
 
 </RelativeLayout>
