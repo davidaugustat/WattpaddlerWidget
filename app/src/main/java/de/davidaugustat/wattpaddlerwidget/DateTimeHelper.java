@@ -31,7 +31,7 @@ public class DateTimeHelper {
         if(time == null){
             return null;
         }
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("H:mm");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
         return time.format(formatter);
     }
 
