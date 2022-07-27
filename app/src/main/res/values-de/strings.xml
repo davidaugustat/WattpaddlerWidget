@@ -17,4 +17,5 @@
     <string name="error_updating_toast_text">Beim Aktualisieren ist ein Fehler aufgetreten. Bitte erneut versuchen.</string>
     <string name="widget_updated_toast_text">Widget wurde aktualisiert.</string>
     <string name="select_location">Ort auswählen</string>
+    <string name="refresh">Aktualisieren</string>
 </resources>

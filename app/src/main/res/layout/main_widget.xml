@@ -69,7 +69,8 @@
             android:layout_height="20dp"
             android:src="@drawable/ic_refresh"
             android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"/>
+            android:layout_centerVertical="true"
+            android:contentDescription="@string/refresh"/>
     </RelativeLayout>
 
 <!--    The last updated text view is only displayed in debug mode. -->

@@ -21,5 +21,6 @@
     <string name="error_updating_toast_text">An error occurred while updating. Please retry.</string>
     <string name="widget_updated_toast_text">Widget was updated.</string>
     <string name="select_location">Select a location</string>
+    <string name="refresh">Refresh</string>
 
 </resources>
