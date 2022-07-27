@@ -143,6 +143,7 @@ public class MainWidget extends AppWidgetProvider {
                                            TidesInfo tidesInfo) {
 
         views.setViewVisibility(R.id.widgetInfoLayout, View.VISIBLE);
+        views.setViewVisibility(R.id.textViewDate, View.VISIBLE);
         views.setViewVisibility(R.id.textViewStatus, View.GONE);
 
         views.setTextViewText(R.id.textViewLocation, tidesInfo.getLocationName());

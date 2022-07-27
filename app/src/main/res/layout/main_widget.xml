@@ -25,12 +25,6 @@
                 android:textStyle="bold"/>
 
             <TextView
-                android:id="@+id/textViewDate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/date_placeholder" />
-
-            <TextView
                 android:id="@+id/textViewHighTide"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -58,15 +52,23 @@
         android:id="@+id/widgetBottomLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
         android:layout_alignParentBottom="true">
+
+        <TextView
+            android:id="@+id/textViewDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:visibility="gone"
+            android:text="@string/date_placeholder" />
 
         <ImageView
             android:id="@+id/buttonUpdate"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:src="@drawable/ic_refresh"
-            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"/>
     </RelativeLayout>
 
