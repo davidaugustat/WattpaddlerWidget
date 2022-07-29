@@ -142,10 +142,7 @@ public class MainWidget extends AppWidgetProvider {
                                            AppWidgetManager appWidgetManager, int appWidgetId,
                                            TidesInfo tidesInfo) {
 
-        views.setViewVisibility(R.id.widgetMainLayout, View.VISIBLE);
-        views.setViewVisibility(R.id.textViewDate, View.VISIBLE);
-        views.setViewVisibility(R.id.textViewStatus, View.GONE);
-
+        setMainLayoutVisible(views);
         views.setTextViewText(R.id.textViewLocation, tidesInfo.getLocationName());
         views.setTextViewText(R.id.textViewDate, tidesInfo.getDateFormatted());
         views.setTextViewText(R.id.textViewHighTide, getHighTidesText(context, tidesInfo));
@@ -160,6 +157,17 @@ public class MainWidget extends AppWidgetProvider {
         }
 
         appWidgetManager.updateAppWidget(appWidgetId, views);
+    }
+
+    /**
+     * Makes all layout elements that belong to the main layout visible and hides the status text
+     * view (which is displayed by default before the first update).
+     */
+    private static void setMainLayoutVisible(RemoteViews views) {
+        views.setViewVisibility(R.id.widgetRow1Layout, View.VISIBLE);
+        views.setViewVisibility(R.id.widgetRow2Layout, View.VISIBLE);
+        views.setViewVisibility(R.id.textViewLowTide, View.VISIBLE);
+        views.setViewVisibility(R.id.textViewStatus, View.GONE);
     }
 
     /**
@@ -263,4 +271,6 @@ public class MainWidget extends AppWidgetProvider {
                     "Not setting up a click listener for it.");
         }
     }
+
+
 }
