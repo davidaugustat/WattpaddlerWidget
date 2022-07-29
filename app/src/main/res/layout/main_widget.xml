@@ -1,77 +1,97 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/Widget.WattpaddlerWidget.AppWidget.Container"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:theme="@style/Theme.WattpaddlerWidget.AppWidgetContainer">
+    android:layout_height="wrap_content"
+    android:theme="@style/Theme.WattpaddlerWidget.AppWidgetContainer"
+    android:padding="10dp">
 
-
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/widgetMainLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-        <LinearLayout
-            android:id="@+id/widgetInfoLayout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:visibility="gone">
+        <RelativeLayout
+            android:id="@+id/widgetRow1Layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/widgetLogo"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@mipmap/ic_launcher2"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:contentDescription="@string/refresh"/>
 
             <TextView
                 android:id="@+id/textViewLocation"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_toEndOf="@+id/widgetLogo"
+                android:layout_marginLeft="10dp"
+                android:layout_centerVertical="true"
                 android:text="@string/location_placeholder"
                 android:textStyle="bold"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/widgetRow2Layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
             <TextView
                 android:id="@+id/textViewHighTide"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/hw_placeholder" />
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:text="@string/hw_placeholder"/>
+
+            <TextView
+                android:id="@+id/textViewDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:text="@string/date_placeholder" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/widgetRow3Layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
             <TextView
                 android:id="@+id/textViewLowTide"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/nw_placeholder" />
-        </LinearLayout>
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:text="@string/nw_placeholder"/>
 
-        <TextView
-            android:id="@+id/textViewStatus"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/not_loaded"
-            android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true"/>
+            <ImageView
+                android:id="@+id/buttonUpdate"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_refresh"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:contentDescription="@string/refresh"/>
 
-    </RelativeLayout>
+        </RelativeLayout>
+    </LinearLayout>
 
-
-    <RelativeLayout
-        android:id="@+id/widgetBottomLayout"
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/textViewStatus"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true">
-
-        <TextView
-            android:id="@+id/textViewDate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_centerVertical="true"
-            android:visibility="gone"
-            android:text="@string/date_placeholder" />
-
-        <ImageView
-            android:id="@+id/buttonUpdate"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:src="@drawable/ic_refresh"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:contentDescription="@string/refresh"/>
-    </RelativeLayout>
+        android:text="@string/not_loaded"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"/>
 
 <!--    The last updated text view is only displayed in debug mode. -->
     <TextView
@@ -79,7 +99,7 @@
         android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/widgetBottomLayout"
+        android:layout_below="@+id/widgetMainLayout"
         android:text="@string/last_updated_placeholder" />
 
 </RelativeLayout>
