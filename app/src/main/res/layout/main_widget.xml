@@ -20,7 +20,7 @@
                 android:id="@+id/widgetLogo"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:src="@mipmap/ic_launcher2"
+                android:src="@drawable/app_icon_round"
                 android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"
                 android:contentDescription="@string/refresh"/>
