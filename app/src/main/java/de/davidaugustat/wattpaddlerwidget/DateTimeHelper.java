@@ -46,7 +46,7 @@ public class DateTimeHelper {
     }
 
     public static String getDateInGermanFormatting(LocalDate date){
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EE dd.MM.yyyy");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EE dd.MM.yy");
         return date.format(formatter);
     }
 }
