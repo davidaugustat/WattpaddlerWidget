@@ -1,4 +1,4 @@
-package de.davidaugustat.wattpaddlerwidget;
+package de.davidaugustat.wattpaddlerwidget.data;
 
 import androidx.annotation.NonNull;
 

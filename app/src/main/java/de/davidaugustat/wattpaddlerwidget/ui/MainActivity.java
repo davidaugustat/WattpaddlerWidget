@@ -1,8 +1,10 @@
-package de.davidaugustat.wattpaddlerwidget;
+package de.davidaugustat.wattpaddlerwidget.ui;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+
+import de.davidaugustat.wattpaddlerwidget.R;
 
 public class MainActivity extends AppCompatActivity {
 

@@ -1,7 +1,9 @@
-package de.davidaugustat.wattpaddlerwidget;
+package de.davidaugustat.wattpaddlerwidget.logic;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
+
+import de.davidaugustat.wattpaddlerwidget.Constants;
 
 public class AppPackageDetectionHelper {
     /**

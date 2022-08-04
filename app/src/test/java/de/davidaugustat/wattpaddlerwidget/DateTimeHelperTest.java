@@ -7,6 +7,8 @@ import org.junit.Test;
 import java.time.LocalDateTime;
 import java.time.Month;
 
+import de.davidaugustat.wattpaddlerwidget.logic.DateTimeHelper;
+
 public class DateTimeHelperTest {
 
     @Test

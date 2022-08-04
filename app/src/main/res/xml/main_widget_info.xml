@@ -13,6 +13,6 @@
     android:resizeMode="horizontal|vertical"
     android:updatePeriodMillis="10800000"
     android:widgetCategory="home_screen"
-    android:configure="de.davidaugustat.wattpaddlerwidget.WidgetConfigurationActivity"
+    android:configure="de.davidaugustat.wattpaddlerwidget.ui.WidgetConfigurationActivity"
     android:widgetFeatures="reconfigurable"
     />

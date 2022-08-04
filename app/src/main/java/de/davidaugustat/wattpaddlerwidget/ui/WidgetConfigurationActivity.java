@@ -1,4 +1,4 @@
-package de.davidaugustat.wattpaddlerwidget;
+package de.davidaugustat.wattpaddlerwidget.ui;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,6 +21,12 @@ import android.widget.Toast;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
+import de.davidaugustat.wattpaddlerwidget.R;
+import de.davidaugustat.wattpaddlerwidget.logic.SharedPreferencesHelper;
+import de.davidaugustat.wattpaddlerwidget.data.WidgetConfigurationViewModel;
+import de.davidaugustat.wattpaddlerwidget.data.Location;
+import de.davidaugustat.wattpaddlerwidget.logic.DataFetcher;
 
 /**
  * App widget configuration activity that lets the user select a location that should be used

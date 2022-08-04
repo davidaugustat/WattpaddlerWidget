@@ -1,6 +1,8 @@
-package de.davidaugustat.wattpaddlerwidget;
+package de.davidaugustat.wattpaddlerwidget.data;
 
 import java.time.LocalDateTime;
+
+import de.davidaugustat.wattpaddlerwidget.logic.DateTimeHelper;
 
 /**
  * Represents a tide that exists and happens on the current day.

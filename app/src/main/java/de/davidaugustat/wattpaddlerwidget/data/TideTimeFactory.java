@@ -1,4 +1,4 @@
-package de.davidaugustat.wattpaddlerwidget;
+package de.davidaugustat.wattpaddlerwidget.data;
 
 /**
  * Constructs a TideTime object whose subtype is dependent on the properties of the input data.

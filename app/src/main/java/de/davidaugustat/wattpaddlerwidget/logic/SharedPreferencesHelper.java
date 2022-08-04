@@ -1,7 +1,10 @@
-package de.davidaugustat.wattpaddlerwidget;
+package de.davidaugustat.wattpaddlerwidget.logic;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+
+import de.davidaugustat.wattpaddlerwidget.Constants;
+import de.davidaugustat.wattpaddlerwidget.data.Location;
 
 /**
  * Helper class that handles the storing of location objects in the shared preferences.

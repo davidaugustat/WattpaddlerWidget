@@ -8,6 +8,9 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
+import de.davidaugustat.wattpaddlerwidget.data.Location;
+import de.davidaugustat.wattpaddlerwidget.logic.DataFetcher;
+
 public class TideTimesTest {
 
     Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();

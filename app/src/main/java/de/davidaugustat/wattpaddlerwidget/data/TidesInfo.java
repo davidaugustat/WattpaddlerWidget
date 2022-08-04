@@ -1,7 +1,9 @@
-package de.davidaugustat.wattpaddlerwidget;
+package de.davidaugustat.wattpaddlerwidget.data;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+
+import de.davidaugustat.wattpaddlerwidget.logic.DateTimeHelper;
 
 /**
  * Stores the information that is displayed on the widget.

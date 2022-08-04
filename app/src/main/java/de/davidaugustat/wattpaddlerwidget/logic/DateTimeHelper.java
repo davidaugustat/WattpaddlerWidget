@@ -1,4 +1,4 @@
-package de.davidaugustat.wattpaddlerwidget;
+package de.davidaugustat.wattpaddlerwidget.logic;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

@@ -1,4 +1,4 @@
-package de.davidaugustat.wattpaddlerwidget;
+package de.davidaugustat.wattpaddlerwidget.logic;
 
 import android.content.Context;
 
@@ -14,6 +14,10 @@ import com.android.volley.toolbox.Volley;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import de.davidaugustat.wattpaddlerwidget.data.Location;
+import de.davidaugustat.wattpaddlerwidget.R;
+import de.davidaugustat.wattpaddlerwidget.data.TidesInfo;
 
 /**
  * This class fetches data from the HTTP API and converts it to object oriented datasets.

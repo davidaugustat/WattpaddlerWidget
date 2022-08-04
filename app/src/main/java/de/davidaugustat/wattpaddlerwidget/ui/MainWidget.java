@@ -1,4 +1,4 @@
-package de.davidaugustat.wattpaddlerwidget;
+package de.davidaugustat.wattpaddlerwidget.ui;
 
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
@@ -11,7 +11,14 @@ import android.widget.RemoteViews;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.StringRes;
+
+import de.davidaugustat.wattpaddlerwidget.Constants;
+import de.davidaugustat.wattpaddlerwidget.R;
+import de.davidaugustat.wattpaddlerwidget.logic.SharedPreferencesHelper;
+import de.davidaugustat.wattpaddlerwidget.data.Location;
+import de.davidaugustat.wattpaddlerwidget.data.TidesInfo;
+import de.davidaugustat.wattpaddlerwidget.logic.AppPackageDetectionHelper;
+import de.davidaugustat.wattpaddlerwidget.logic.DataFetcher;
 
 /**
  * Implementation of App Widget functionality.
