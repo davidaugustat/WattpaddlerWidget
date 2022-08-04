@@ -59,7 +59,7 @@ public class DataFetcher {
         String url = String.format(context.getString(R.string.tides_widget_api_url), location.getId(), date);
         getTextFromUrl(url, response -> {
             try {
-                TidesInfo tidesInfo = tidesInfoStringToObject(location, response);
+                TidesInfo tidesInfo = tidesInfoStringToObject(location, date, response);
                 dataFetchedAction.accept(tidesInfo);
             } catch (IllegalArgumentException e){
                 errorAction.accept("Error: Malformed response from API");
@@ -105,18 +105,13 @@ public class DataFetcher {
      * @param response Raw response text from the API
      * @return TidesInfo object containing the data from the API
      */
-    private TidesInfo tidesInfoStringToObject(Location location, String response) {
+    private TidesInfo tidesInfoStringToObject(Location location, String targetDate, String response) {
         String[] lines = response.split("\n");
         if (lines.length < 4) {
             throw new IllegalArgumentException("Malformed response data. Not enough lines.");
         }
         String[] dayInfos = Arrays.copyOfRange(lines, 1, lines.length - 2);
-
-        String date = null;
-        String highTide1 = null;
-        String highTide2 = null;
-        String lowTide1 = null;
-        String lowTide2 = null;
+        TidesInfo tidesInfo = new TidesInfo(location, targetDate);
 
         for (String dayInfo : dayInfos) {
             String[] components = dayInfo.split(";");
@@ -126,31 +121,9 @@ public class DataFetcher {
             String dateString = components[0].trim();
             String timeString = components[1].trim();
             String tideCategoryString = components[2].trim();
-
-            if (date == null) {
-                date = dateString;
-            }
-
-            switch (tideCategoryString) {
-                case "H":
-                    if (highTide1 == null) {
-                        highTide1 = timeString;
-                    } else {
-                        highTide2 = timeString;
-                    }
-                    break;
-                case "N":
-                    if (lowTide1 == null) {
-                        lowTide1 = timeString;
-                    } else {
-                        lowTide2 = timeString;
-                    }
-                    break;
-                default:
-                    throw new IllegalArgumentException("Invalid tide category. Must be 'H' or 'N'");
-            }
+            tidesInfo.addTimeTime(dateString, timeString, tideCategoryString, targetDate);
         }
-        return new TidesInfo(location, date, highTide1, highTide2, lowTide1, lowTide2);
+        return tidesInfo;
     }
 
     /**

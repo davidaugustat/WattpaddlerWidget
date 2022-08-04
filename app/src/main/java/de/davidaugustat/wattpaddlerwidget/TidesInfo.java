@@ -2,7 +2,6 @@ package de.davidaugustat.wattpaddlerwidget;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 /**
  * Stores the information that is displayed on the widget.
@@ -11,35 +10,46 @@ public class TidesInfo {
     private final String locationId;
     private final String locationName;
     private final LocalDate date;
-    private final LocalDateTime highTide1;
-    private final LocalDateTime highTide2;
-    private final LocalDateTime lowTide1;
-    private final LocalDateTime lowTide2;
+    private TideTime highTide1;
+    private TideTime highTide2;
+    private TideTime lowTide1;
+    private TideTime lowTide2;
     private final LocalDateTime updatedTime;
 
-    public TidesInfo(String locationId, String locationName, LocalDate date, LocalDateTime highTide1,
-                     LocalDateTime highTide2, LocalDateTime lowTide1, LocalDateTime lowTide2, LocalDateTime updatedTime) {
-        this.locationId = locationId;
-        this.locationName = locationName;
-        this.date = date;
-        this.highTide1 = highTide1;
-        this.highTide2 = highTide2;
-        this.lowTide1 = lowTide1;
-        this.lowTide2 = lowTide2;
-        this.updatedTime = updatedTime;
-    }
 
-    public TidesInfo(Location location, String dateString, String highTide1,
-                     String highTide2, String lowTide1, String lowTide2) {
+    public TidesInfo(Location location, String dateString) {
         this.locationId = location.getId();
         this.locationName = location.getName();
-        this.highTide1 = DateTimeHelper.parseTidesTimeInCET(dateString, highTide1);
-        this.highTide2 = DateTimeHelper.parseTidesTimeInCET(dateString, highTide2);
-        this.lowTide1 = DateTimeHelper.parseTidesTimeInCET(dateString, lowTide1);
-        this.lowTide2 = DateTimeHelper.parseTidesTimeInCET(dateString, lowTide2);
+        this.highTide1 = new NonExistentTideTime();
+        this.highTide2 = new NonExistentTideTime();
+        this.lowTide1 = new NonExistentTideTime();
+        this.lowTide2 = new NonExistentTideTime();
 
         this.date = DateTimeHelper.parseDate(dateString);
         this.updatedTime = LocalDateTime.now();
+    }
+
+    public void addTimeTime(String dateString, String timeString, String categoryString, String targetDateString){
+        TideTime currentTideTime = TideTimeFactory.getTideTime(dateString, timeString, targetDateString);
+
+        switch (categoryString) {
+            case "H":
+                if (highTide1 instanceof NonExistentTideTime) {
+                    highTide1 = currentTideTime;
+                } else if (highTide2 instanceof NonExistentTideTime) {
+                    highTide2 = currentTideTime;
+                }
+                break;
+            case "N":
+                if (lowTide1 instanceof NonExistentTideTime) {
+                    lowTide1 = currentTideTime;
+                } else if (lowTide2 instanceof NonExistentTideTime){
+                    lowTide2 = currentTideTime;
+                }
+                break;
+            default:
+                throw new IllegalArgumentException("Invalid tide category. Must be 'H' or 'N'");
+        }
     }
 
     public String getLocationId() {
@@ -55,19 +65,19 @@ public class TidesInfo {
     }
 
     public String getHighTide1Formatted() {
-        return DateTimeHelper.getFormattedTidesTime(highTide1);
+        return highTide1.getHumanReadableString();
     }
 
     public String getHighTide2Formatted() {
-        return DateTimeHelper.getFormattedTidesTime(highTide2);
+        return highTide2.getHumanReadableString();
     }
 
     public String getLowTide1Formatted() {
-        return DateTimeHelper.getFormattedTidesTime(lowTide1);
+        return lowTide1.getHumanReadableString();
     }
 
     public String getLowTide2Formatted() {
-        return DateTimeHelper.getFormattedTidesTime(lowTide2);
+        return lowTide2.getHumanReadableString();
     }
 
     public LocalDateTime getUpdatedTime() {
@@ -80,24 +90,6 @@ public class TidesInfo {
 
     public String getLastUpdatedTimeFormatted(){
         return DateTimeHelper.getFormattedPreciseDateTime(updatedTime);
-    }
-
-    public int getNumberOfHighTides(){
-        if(highTide1 != null && highTide2 != null){
-            return 2;
-        } else if(highTide1 != null) {
-            return 1;
-        }
-        return 0;
-    }
-
-    public int getNumberOfLowTides(){
-        if(lowTide1 != null && lowTide2 != null){
-            return 2;
-        } else if(lowTide1 != null) {
-            return 1;
-        }
-        return 0;
     }
 
     @Override

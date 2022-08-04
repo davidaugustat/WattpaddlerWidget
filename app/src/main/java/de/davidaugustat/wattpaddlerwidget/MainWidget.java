@@ -175,21 +175,11 @@ public class MainWidget extends AppWidgetProvider {
      */
     @NonNull
     private static String getLowTidesText(Context context, TidesInfo tidesInfo) {
-        String lowTideText = "";
-        switch (tidesInfo.getNumberOfLowTides()) {
-            case 2:
-                lowTideText = String.format(context.getString(R.string.low_tides_text),
-                        tidesInfo.getLowTide1Formatted(), tidesInfo.getLowTide2Formatted());
-                break;
-            case 1:
-                lowTideText = String.format(context.getString(R.string.low_tides_text),
-                        tidesInfo.getLowTide1Formatted(), "*");
-                break;
-            case 0:
-                lowTideText = String.format(context.getString(R.string.low_tides_text), "*", "*");
-                break;
-        }
-        return lowTideText;
+        return String.format(
+                context.getString(R.string.low_tides_text),
+                tidesInfo.getLowTide1Formatted(),
+                tidesInfo.getLowTide2Formatted()
+        );
     }
 
     /**
@@ -197,21 +187,11 @@ public class MainWidget extends AppWidgetProvider {
      */
     @NonNull
     private static String getHighTidesText(Context context, TidesInfo tidesInfo) {
-        String highTideText = "";
-        switch (tidesInfo.getNumberOfHighTides()) {
-            case 2:
-                highTideText = String.format(context.getString(R.string.high_tides_text),
-                        tidesInfo.getHighTide1Formatted(), tidesInfo.getHighTide2Formatted());
-                break;
-            case 1:
-                highTideText = String.format(context.getString(R.string.high_tides_text),
-                        tidesInfo.getHighTide1Formatted(), "*");
-                break;
-            case 0:
-                highTideText = String.format(context.getString(R.string.high_tides_text), "*", "*");
-                break;
-        }
-        return highTideText;
+        return String.format(
+                context.getString(R.string.high_tides_text),
+                tidesInfo.getHighTide1Formatted(),
+                tidesInfo.getHighTide2Formatted()
+        );
     }
 
     /**
