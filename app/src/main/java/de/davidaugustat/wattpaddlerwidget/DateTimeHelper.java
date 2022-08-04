@@ -27,6 +27,11 @@ public class DateTimeHelper {
                 .toLocalDateTime();
     }
 
+    public static LocalDateTime parseLocalDateTime(String date, String time){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd H:mm");
+        return LocalDateTime.parse(date + " " + time, formatter);
+    }
+
     public static String getFormattedTidesTime(LocalDateTime time){
         if(time == null){
             return null;
