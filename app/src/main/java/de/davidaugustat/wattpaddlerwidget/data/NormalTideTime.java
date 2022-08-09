@@ -11,8 +11,8 @@ public class NormalTideTime  extends TideTime{
 
     private final LocalDateTime dateTime;
 
-    public NormalTideTime(String dateString, String timeString){
-        dateTime = DateTimeHelper.parseLocalDateTime(dateString, timeString);
+    public NormalTideTime(LocalDateTime dateTime){
+        this.dateTime = dateTime;
     }
 
     @Override
