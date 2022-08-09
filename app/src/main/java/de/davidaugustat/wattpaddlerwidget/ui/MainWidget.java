@@ -152,8 +152,10 @@ public class MainWidget extends AppWidgetProvider {
         setMainLayoutVisible(views);
         views.setTextViewText(R.id.textViewLocation, tidesInfo.getLocationName());
         views.setTextViewText(R.id.textViewDate, tidesInfo.getDateFormatted());
-        views.setTextViewText(R.id.textViewHighTide, getHighTidesText(context, tidesInfo));
-        views.setTextViewText(R.id.textViewLowTide, getLowTidesText(context, tidesInfo));
+        views.setTextViewText(R.id.textViewHighTide,
+                tidesInfo.getHighTidesFormatted(context.getString(R.string.high_tides_text)));
+        views.setTextViewText(R.id.textViewLowTide,
+                tidesInfo.getLowTidesFormatted(context.getString(R.string.low_tides_text)));
 
         // Show last updated text only for debug purposes:
         if (Constants.SHOW_DEBUG) {
@@ -175,30 +177,6 @@ public class MainWidget extends AppWidgetProvider {
         views.setViewVisibility(R.id.widgetRow2Layout, View.VISIBLE);
         views.setViewVisibility(R.id.textViewLowTide, View.VISIBLE);
         views.setViewVisibility(R.id.textViewStatus, View.GONE);
-    }
-
-    /**
-     * Generates string for low tides that can be displayed on the widget.
-     */
-    @NonNull
-    private static String getLowTidesText(Context context, TidesInfo tidesInfo) {
-        return String.format(
-                context.getString(R.string.low_tides_text),
-                tidesInfo.getLowTide1Formatted(),
-                tidesInfo.getLowTide2Formatted()
-        );
-    }
-
-    /**
-     * Generates string for high tides that can be displayed on the widget.
-     */
-    @NonNull
-    private static String getHighTidesText(Context context, TidesInfo tidesInfo) {
-        return String.format(
-                context.getString(R.string.high_tides_text),
-                tidesInfo.getHighTide1Formatted(),
-                tidesInfo.getHighTide2Formatted()
-        );
     }
 
     /**
@@ -258,6 +236,4 @@ public class MainWidget extends AppWidgetProvider {
                     "Not setting up a click listener for it.");
         }
     }
-
-
 }
