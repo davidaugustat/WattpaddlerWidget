@@ -18,6 +18,7 @@ import java.util.List;
 import de.davidaugustat.wattpaddlerwidget.data.Location;
 import de.davidaugustat.wattpaddlerwidget.R;
 import de.davidaugustat.wattpaddlerwidget.data.TidesInfo;
+import de.davidaugustat.wattpaddlerwidget.data.TidesInfoBuilder;
 
 /**
  * This class fetches data from the HTTP API and converts it to object oriented datasets.
@@ -103,7 +104,8 @@ public class DataFetcher {
      * ENDDATA+
      * Pegel/Date 510P at 2022-07-07
      *
-     * It is allowed that only one high tide (H) or low tide (N) occurs instead of two.
+     * It is allowed that only one high tide (H) or low tide (N) occurs instead of two. It is also
+     * allowed that no low tides (N) are contained at all.
      *
      * @param location Location for which the data was queried.
      * @param response Raw response text from the API
@@ -115,7 +117,7 @@ public class DataFetcher {
             throw new IllegalArgumentException("Malformed response data. Not enough lines.");
         }
         String[] dayInfos = Arrays.copyOfRange(lines, 1, lines.length - 2);
-        TidesInfo tidesInfo = new TidesInfo(location, targetDate);
+        TidesInfoBuilder tidesInfoFactory = new TidesInfoBuilder(location, targetDate);
 
         for (String dayInfo : dayInfos) {
             String[] components = dayInfo.split(";");
@@ -125,9 +127,9 @@ public class DataFetcher {
             String dateString = components[0].trim();
             String timeString = components[1].trim();
             String tideCategoryString = components[2].trim();
-            tidesInfo.addTimeTime(dateString, timeString, tideCategoryString, targetDate);
+            tidesInfoFactory.addTideTime(dateString, timeString, tideCategoryString);
         }
-        return tidesInfo;
+        return tidesInfoFactory.build();
     }
 
     /**
