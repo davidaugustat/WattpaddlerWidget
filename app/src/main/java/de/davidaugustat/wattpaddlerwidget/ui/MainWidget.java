@@ -5,6 +5,7 @@ import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.View;
 import android.widget.RemoteViews;
@@ -36,6 +37,10 @@ public class MainWidget extends AppWidgetProvider {
                                 int appWidgetId, boolean isManual) {
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.main_widget);
+
+        // Debug:
+        views.setInt(R.id.widgetMainLayout, "setBackgroundColor", Color.BLUE);
+        appWidgetManager.updateAppWidget(appWidgetId, views);
 
         views.setOnClickPendingIntent(R.id.buttonUpdate, getPendingSelfIntent(context, appWidgetId));
         setUpOpenAppOnClick(views, context);
