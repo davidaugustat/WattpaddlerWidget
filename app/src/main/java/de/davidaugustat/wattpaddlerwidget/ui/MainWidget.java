@@ -5,25 +5,18 @@ import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.util.Log;
 import android.view.View;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-
-import java.time.LocalDateTime;
-import java.util.Random;
-
 import de.davidaugustat.wattpaddlerwidget.Constants;
 import de.davidaugustat.wattpaddlerwidget.R;
-import de.davidaugustat.wattpaddlerwidget.logic.DateTimeHelper;
-import de.davidaugustat.wattpaddlerwidget.logic.SharedPreferencesHelper;
 import de.davidaugustat.wattpaddlerwidget.data.Location;
 import de.davidaugustat.wattpaddlerwidget.data.TidesInfo;
 import de.davidaugustat.wattpaddlerwidget.logic.AppPackageDetectionHelper;
 import de.davidaugustat.wattpaddlerwidget.logic.DataFetcher;
+import de.davidaugustat.wattpaddlerwidget.logic.SharedPreferencesHelper;
 
 /**
  * Implementation of App Widget functionality.
@@ -42,18 +35,12 @@ public class MainWidget extends AppWidgetProvider {
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.main_widget);
 
-
         views.setOnClickPendingIntent(R.id.buttonUpdate, getPendingSelfIntent(context, appWidgetId));
         setUpOpenAppOnClick(views, context);
 
-        // Debug:
-        if(Constants.SHOW_DEBUG) {
-            Random random = new Random();
-            //int randomColor = Color.rgb(random.nextInt(255), random.nextInt(255), random.nextInt(255));
-            views.setInt(R.id.widgetMainLayout, "setBackgroundColor", Color.BLUE);
-            views.setTextViewText(R.id.textViewDebug2, "Letzter Update-Versuch: " + DateTimeHelper.getFormattedPreciseDateTime(LocalDateTime.now()));
-            appWidgetManager.updateAppWidget(appWidgetId, views);
-        }
+        // Update app widget here already because on some devices initial update after boot fails
+        // otherwise:
+        appWidgetManager.updateAppWidget(appWidgetId, views);
 
         refreshWidget(views, context, appWidgetManager, appWidgetId, isManual);
 
