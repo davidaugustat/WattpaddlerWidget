@@ -13,8 +13,7 @@ The app is available for download from the Google Play Store:
 The app does not have a launcher icon in the app drawer. Instead, long-press on your homescreen to add the widget. You will then be prompted to select a location.
 
 ## Screenshots
-<img src="screenshots/widgets.png" height="600px" />
-<img src="screenshots/location-selection.png" height="600px" />
+<img src="screenshots/widgets.png" height="600px" /> <img src="screenshots/location-selection.png" height="600px" />
 
 ## Project Setup
 First clone the repository to your machine.
