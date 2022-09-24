@@ -45,7 +45,7 @@ public class DataFetcher {
         getTextFromUrl(url, response -> {
             List<Location> locations = locationsCsvToList(response);
             dataFetchedAction.accept(locations);
-        }, error -> errorAction.accept(error.getMessage()));
+        }, error -> errorAction.accept(error.toString()));
     }
 
     /**
