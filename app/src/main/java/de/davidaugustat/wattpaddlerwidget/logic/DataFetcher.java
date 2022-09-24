@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import de.davidaugustat.wattpaddlerwidget.BuildConfig;
 import de.davidaugustat.wattpaddlerwidget.data.Location;
 import de.davidaugustat.wattpaddlerwidget.R;
 import de.davidaugustat.wattpaddlerwidget.data.TidesInfo;
@@ -40,7 +41,7 @@ public class DataFetcher {
      */
     public void fetchLocations(Consumer<List<Location>> dataFetchedAction,
                                Consumer<String> errorAction) {
-        String url = context.getString(R.string.locations_api_url);
+        String url = BuildConfig.LOCATIONS_API_URL + context.getString(R.string.locations_api_path);
         getTextFromUrl(url, response -> {
             List<Location> locations = locationsCsvToList(response);
             dataFetchedAction.accept(locations);
@@ -61,7 +62,8 @@ public class DataFetcher {
      */
     public void fetchTidesDataSingleDay(Location location, String date, Consumer<TidesInfo> dataFetchedAction,
                                         Consumer<String> errorAction) {
-        String url = String.format(context.getString(R.string.tides_widget_api_url), location.getId(), date);
+        String url = BuildConfig.TIDES_WIDGET_API_URL
+                + String.format(context.getString(R.string.tides_widget_api_path), location.getId(), date);
         getTextFromUrl(url, response -> {
             try {
                 TidesInfo tidesInfo = tidesInfoStringToObject(location, date, response);

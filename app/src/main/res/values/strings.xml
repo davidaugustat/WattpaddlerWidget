@@ -4,9 +4,8 @@
     <string name="high_tides_text">HW: %1$s / %2$s</string>
     <string name="low_tides_text">NW: %1$s / %2$s</string>
     <string name="last_updated_text">Last updated: %1$s</string>
-    <string name="locations_api_url" translatable="false">https://example.com/locations-api/widgetpegel.csv</string>
-    <string name="tides_api_url" translatable="false">https://example.com/app-api/?AtPegel=%1$s&amp;AtDate=%2$s</string>
-    <string name="tides_widget_api_url" translatable="false">https://example.com/widget-api/?AtPegel=%1$s&amp;AtDate=%2$s</string>
+    <string name="locations_api_path" translatable="false">/widgetpegel.csv</string>
+    <string name="tides_widget_api_path" translatable="false">/?AtPegel=%1$s&amp;AtDate=%2$s</string>
     <string name="done_text">Done</string>
     <string name="error_loading_locations_text">An error occurred while loading the locations list.</string>
     <string name="retry_text">Retry</string>
