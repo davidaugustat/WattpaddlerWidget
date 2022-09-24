@@ -39,7 +39,7 @@ Then open the project in Android Studio and run or build it as usual.
 ## Description of the API
 *Note: The API was NOT designed by me. It already existed and had to be used for the widget. Thus, it is not a fancy JSON API but has a custom format.*
 
-In the following, the two required API endpoints are described. The server-sided code is not part of this repository as it already existed and was not created by me. If you want do use this project, you will have to create the server-sided code yourself.
+In the following, the two required API endpoints are described. The server-sided code is not part of this repository as it already existed and was not created by me. If you want to use this project, you will have to create the server-sided code yourself.
 
 
 ### Locations API
