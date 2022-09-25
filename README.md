@@ -78,16 +78,16 @@ Note that there are up to four tide times on a day but there may be less if a ti
 
 An example for an API call is the following:
 
-Requested URL: `https://example.com/locations-api/?AtPegel=510P&AtDate=2022-10-06`
+Requested URL: `https://example.com/locations-api/?AtPegel=510P&AtDate=2022-10-09`
 
 Response:
 ```
 STARTDATA+
-2022-10-06;04:18;N
-2022-10-06;11:05;H
-2022-10-06;17:31;N
-2022-10-07;00:05;H
+2022-10-09;02:13;H
+2022-10-09;08:22;N
+2022-10-09;14:28;H
+2022-10-09;21:04;N
 ENDDATA+
-Pegel/Date 510P at 2022-10-06
+Pegel/Date 510P at 2022-10-09
 ```
 Note that line breaks matter in this format.
