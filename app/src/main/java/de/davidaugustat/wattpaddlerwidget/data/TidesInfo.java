@@ -22,15 +22,26 @@ public class TidesInfo {
 
     public TidesInfo(Location location, String dateString, Pair<TideTime, TideTime> lowTides,
                      Pair<TideTime, TideTime> highTides) {
-        this.locationId = location.getId();
-        this.locationName = location.getName();
-        this.highTide1 = highTides.first;
-        this.highTide2 = highTides.second;
-        this.lowTide1 = lowTides.first;
-        this.lowTide2 = lowTides.second;
+        this(location.getId(), location.getName(), DateTimeHelper.parseDate(dateString),
+                lowTides.first, lowTides.second, highTides.first, highTides.second, LocalDateTime.now());
+    }
 
-        this.date = DateTimeHelper.parseDate(dateString);
-        this.updatedTime = LocalDateTime.now();
+    /**
+     * Internal constructor used for creating a TidesInfo object with all fields specified.
+     * This is especially useful for restoring a TidesInfo object from cache.
+     */
+    public TidesInfo(String locationId, String locationName, LocalDate date,
+                     TideTime lowTide1, TideTime lowTide2,
+                     TideTime highTide1, TideTime highTide2,
+                     LocalDateTime updatedTime) {
+        this.locationId = locationId;
+        this.locationName = locationName;
+        this.date = date;
+        this.lowTide1 = lowTide1;
+        this.lowTide2 = lowTide2;
+        this.highTide1 = highTide1;
+        this.highTide2 = highTide2;
+        this.updatedTime = updatedTime;
     }
 
     public String getLocationId() {
@@ -55,6 +66,22 @@ public class TidesInfo {
         return String.format(formatString,
                 lowTide1.getHumanReadableString(),
                 lowTide2.getHumanReadableString());
+    }
+
+    public TideTime getHighTide1() {
+        return highTide1;
+    }
+
+    public TideTime getHighTide2() {
+        return highTide2;
+    }
+
+    public TideTime getLowTide1() {
+        return lowTide1;
+    }
+
+    public TideTime getLowTide2() {
+        return lowTide2;
     }
 
     public LocalDateTime getUpdatedTime() {

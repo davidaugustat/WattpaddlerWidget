@@ -15,6 +15,13 @@ public class NormalTideTime  extends TideTime{
         this.dateTime = dateTime;
     }
 
+    /**
+     * Returns the date and time when the tide occurs.
+     */
+    public LocalDateTime getDateTime() {
+        return dateTime;
+    }
+
     @Override
     public String getHumanReadableString() {
         return DateTimeHelper.getFormattedTidesTime(dateTime);

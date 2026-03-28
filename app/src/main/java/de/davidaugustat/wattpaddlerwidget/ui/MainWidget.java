@@ -38,6 +38,13 @@ public class MainWidget extends AppWidgetProvider {
         views.setOnClickPendingIntent(R.id.buttonUpdate, getPendingSelfIntent(context, appWidgetId));
         setUpOpenAppOnClick(views, context);
 
+        // Try to load and display cached data immediately to avoid "Not loaded" flicker.
+        TidesInfo cachedTides = SharedPreferencesHelper.getTidesCache(appWidgetId, context);
+        if (cachedTides != null && cachedTides.getDate().equals(java.time.LocalDate.now())) {
+            updateWidgetLayout(views, context, appWidgetManager, appWidgetId, cachedTides);
+            Log.d("###", "Updated widget from locally cached info: " + cachedTides);
+        }
+
         // Update app widget here already because on some devices initial update after boot fails
         // otherwise:
         appWidgetManager.updateAppWidget(appWidgetId, views);
@@ -99,6 +106,10 @@ public class MainWidget extends AppWidgetProvider {
             Location location = SharedPreferencesHelper.getLocation(appWidgetId, context);
             new DataFetcher(context).fetchTidesDataSingleDay(location, tidesInfo -> {
                         updateWidgetLayout(views, context, appWidgetManager, appWidgetId, tidesInfo);
+                        Log.d("###", "Updated widget from refreshWidget: " + tidesInfo);
+                        // Save the newly fetched data to the cache:
+                        SharedPreferencesHelper.saveTidesCache(appWidgetId, context, tidesInfo);
+
                         Log.d("Tides Info", tidesInfo.toString());
                         if (isManual) {
                             Toast.makeText(context, context.getString(R.string.widget_updated_toast_text), Toast.LENGTH_SHORT).show();
