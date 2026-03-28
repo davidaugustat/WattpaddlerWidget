@@ -106,21 +106,15 @@ public class MainWidget extends AppWidgetProvider {
             Location location = SharedPreferencesHelper.getLocation(appWidgetId, context);
             new DataFetcher(context).fetchTidesDataSingleDay(location, tidesInfo -> {
                         updateWidgetLayout(views, context, appWidgetManager, appWidgetId, tidesInfo);
-                        Log.d("###", "Updated widget from refreshWidget: " + tidesInfo);
+                        Log.d("###", "Updated widget from refreshWidget. isManual: " + isManual);
                         // Save the newly fetched data to the cache:
                         SharedPreferencesHelper.saveTidesCache(appWidgetId, context, tidesInfo);
 
                         Log.d("Tides Info", tidesInfo.toString());
-                        if (isManual) {
-                            Toast.makeText(context, context.getString(R.string.widget_updated_toast_text), Toast.LENGTH_SHORT).show();
-                        }
                     },
                     errorMessage -> {
                         updateWidgetLayoutAtError(errorMessage, views, appWidgetManager, appWidgetId);
-                        Log.e("Error fetching tides", errorMessage);
-                        if (isManual) {
-                            Toast.makeText(context, context.getString(R.string.error_updating_toast_text), Toast.LENGTH_SHORT).show();
-                        }
+                        Log.e("Error fetching tides", "isManual: " + isManual + ", error: " + errorMessage );
                     });
         } catch (IllegalArgumentException exception) {
             Log.d("No location", "No location stored for widget ID" + appWidgetId);
