@@ -1,25 +1,32 @@
 package de.davidaugustat.wattpaddlerwidget.logic;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
 
+import androidx.annotation.NonNull;
 import androidx.core.util.Consumer;
 
-import com.android.volley.DefaultRetryPolicy;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import de.davidaugustat.wattpaddlerwidget.BuildConfig;
 import de.davidaugustat.wattpaddlerwidget.data.Location;
 import de.davidaugustat.wattpaddlerwidget.R;
 import de.davidaugustat.wattpaddlerwidget.data.TidesInfo;
 import de.davidaugustat.wattpaddlerwidget.data.TidesInfoBuilder;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 /**
  * This class fetches data from the HTTP API and converts it to object oriented datasets.
@@ -27,7 +34,11 @@ import de.davidaugustat.wattpaddlerwidget.data.TidesInfoBuilder;
 public class DataFetcher {
 
     private final Context context;
-    private final int REQUEST_TIMEOUT_MILLIS = 5000;
+    private static final int REQUEST_TIMEOUT_MILLIS = 5000;
+    private static final OkHttpClient client = new OkHttpClient.Builder()
+            .connectTimeout(REQUEST_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS)
+            .readTimeout(REQUEST_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS)
+            .build();
 
     public DataFetcher(Context context) {
         this.context = context;
@@ -45,13 +56,13 @@ public class DataFetcher {
         getTextFromUrl(url, response -> {
             List<Location> locations = locationsCsvToList(response);
             dataFetchedAction.accept(locations);
-        }, error -> errorAction.accept(error.toString()));
+        }, errorAction);
     }
 
     /**
      * Fetches the tides data for a single day from the widget API. The API returns all high and
      * low tides of the specified day.
-     *
+     * <p>
      * This method converts the received data into a TidesInfo object which is then provided to
      * a callback.
      *
@@ -71,15 +82,13 @@ public class DataFetcher {
             } catch (IllegalArgumentException e){
                 errorAction.accept("Error: Malformed response from API");
             }
-        }, error -> {
-            errorAction.accept(error.toString());
-        });
+        }, errorAction);
     }
 
     /**
      * Fetches the tides data for the current day from the widget API. The API returns all high and
      * low tides of the current day.
-     *
+     * <p>
      * This method converts the received data into a TidesInfo object which is then provided to
      * a callback.
      *
@@ -95,9 +104,9 @@ public class DataFetcher {
 
     /**
      * Converts raw response from the widget API to a TidesInfo objects.
-     *
+     * <p>
      * The response string must have the following structure (example):
-     *
+     * <p>
      * STARTDATA+
      * 2022-07-07; 0:38;N
      * 2022-07-07; 6:55;H
@@ -105,7 +114,7 @@ public class DataFetcher {
      * 2022-07-07;19:04;H
      * ENDDATA+
      * Pegel/Date 510P at 2022-07-07
-     *
+     * <p>
      * It is allowed that only one high tide (H) or low tide (N) occurs instead of two. It is also
      * allowed that no low tides (N) are contained at all.
      *
@@ -135,21 +144,52 @@ public class DataFetcher {
     }
 
     /**
-     * Fetches a string from an URL via HTTP.
+     * Fetches a string from an URL via HTTP using OkHttp.
      *
      * @param url           URL which should be used to access the data.
      * @param successAction Called after data has been retrieved.
      * @param errorAction   Called in case of a network error.
      */
-    private void getTextFromUrl(String url, Response.Listener<String> successAction,
-                                Response.ErrorListener errorAction) {
-        RequestQueue queue = Volley.newRequestQueue(context);
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url, successAction, errorAction);
-        stringRequest.setShouldCache(false);
-        stringRequest.setRetryPolicy(new DefaultRetryPolicy(REQUEST_TIMEOUT_MILLIS,
-                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-        queue.add(stringRequest);
+    private void getTextFromUrl(String url, Consumer<String> successAction,
+                                Consumer<String> errorAction) {
+        Request request = new Request.Builder()
+                .url(url)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                new Handler(Looper.getMainLooper()).post(() -> errorAction.accept(e.toString()));
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                if (!response.isSuccessful()) {
+                    new Handler(Looper.getMainLooper()).post(() -> errorAction.accept("Unexpected code " + response));
+                    return;
+                }
+
+                try (ResponseBody responseBody = response.body()) {
+                    if (responseBody == null) {
+                        new Handler(Looper.getMainLooper()).post(() -> errorAction.accept("Empty response"));
+                        return;
+                    }
+                    
+                    // The API seems to use ISO-8859-1 (Latin-1) encoding, which is common for 
+                    // older German web services. OkHttp defaults to UTF-8 if no charset is
+                    // specified in the Content-Type header. We explicitly handle this here
+                    // to support German umlauts and "ß".
+                    MediaType contentType = responseBody.contentType();
+                    Charset charset = (contentType != null) ? contentType.charset(StandardCharsets.ISO_8859_1) : StandardCharsets.ISO_8859_1;
+                    if (charset == null) {
+                        charset = StandardCharsets.ISO_8859_1;
+                    }
+
+                    String bodyString = new String(responseBody.bytes(), charset);
+                    new Handler(Looper.getMainLooper()).post(() -> successAction.accept(bodyString));
+                }
+            }
+        });
     }
 
     /**
