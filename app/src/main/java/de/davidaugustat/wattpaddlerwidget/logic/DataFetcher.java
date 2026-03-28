@@ -170,12 +170,7 @@ public class DataFetcher {
                 }
 
                 try (ResponseBody responseBody = response.body()) {
-                    if (responseBody == null) {
-                        new Handler(Looper.getMainLooper()).post(() -> errorAction.accept("Empty response"));
-                        return;
-                    }
-                    
-                    // The API seems to use ISO-8859-1 (Latin-1) encoding, which is common for 
+                    // The API seems to use ISO-8859-1 (Latin-1) encoding, which is common for
                     // older German web services. OkHttp defaults to UTF-8 if no charset is
                     // specified in the Content-Type header. We explicitly handle this here
                     // to support German umlauts and "ß".
