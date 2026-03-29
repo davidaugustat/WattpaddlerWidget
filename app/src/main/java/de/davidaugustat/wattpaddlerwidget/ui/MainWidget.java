@@ -8,7 +8,8 @@ import android.content.Intent;
 import android.util.Log;
 import android.view.View;
 import android.widget.RemoteViews;
-import android.widget.Toast;
+
+import java.util.Objects;
 
 import de.davidaugustat.wattpaddlerwidget.Constants;
 import de.davidaugustat.wattpaddlerwidget.R;
@@ -37,13 +38,6 @@ public class MainWidget extends AppWidgetProvider {
 
         views.setOnClickPendingIntent(R.id.buttonUpdate, getPendingSelfIntent(context, appWidgetId));
         setUpOpenAppOnClick(views, context);
-
-        // Try to load and display cached data immediately to avoid "Not loaded" flicker.
-        TidesInfo cachedTides = SharedPreferencesHelper.getTidesCache(appWidgetId, context);
-        if (cachedTides != null && cachedTides.getDate().equals(java.time.LocalDate.now())) {
-            updateWidgetLayout(views, context, appWidgetManager, appWidgetId, cachedTides);
-            Log.d("###", "Updated widget from locally cached info: " + cachedTides);
-        }
 
         // Update app widget here already because on some devices initial update after boot fails
         // otherwise:
@@ -113,12 +107,12 @@ public class MainWidget extends AppWidgetProvider {
                         Log.d("Tides Info", tidesInfo.toString());
                     },
                     errorMessage -> {
-                        updateWidgetLayoutAtError(errorMessage, views, appWidgetManager, appWidgetId);
+                        updateWidgetLayoutAtError(errorMessage, views, context, appWidgetManager, appWidgetId);
                         Log.e("Error fetching tides", "isManual: " + isManual + ", error: " + errorMessage );
                     });
         } catch (IllegalArgumentException exception) {
             Log.d("No location", "No location stored for widget ID" + appWidgetId);
-            updateWidgetLayoutAtError(exception.toString(), views, appWidgetManager, appWidgetId);
+            updateWidgetLayoutAtError(exception.toString(), views, context, appWidgetManager, appWidgetId);
         }
     }
 
@@ -136,16 +130,24 @@ public class MainWidget extends AppWidgetProvider {
      *
      * @param errorString      String for the error message
      * @param views            RemoteViews representing the widget
+     * @param context          Context
      * @param appWidgetManager AppWidgetManager used to update the widget.
      * @param appWidgetId      ID of the widget.
      */
-    private static void updateWidgetLayoutAtError(String errorString, RemoteViews views,
+    private static void updateWidgetLayoutAtError(String errorString, RemoteViews views, Context context,
                                                   AppWidgetManager appWidgetManager, int appWidgetId) {
-        if (Constants.SHOW_DEBUG) {
-            views.setViewVisibility(R.id.textViewDebug, View.VISIBLE);
-            views.setTextViewText(R.id.textViewDebug, errorString);
+        // Try to load and display cached data from last request
+        TidesInfo cachedTides = SharedPreferencesHelper.getTidesCache(appWidgetId, context);
+        if (cachedTides != null) {
+            updateWidgetLayout(views, context, appWidgetManager, appWidgetId, cachedTides);
+            Log.d("###", "Updated widget from locally cached info: " + cachedTides);
+        } else {
+            if (Constants.SHOW_DEBUG) {
+                views.setViewVisibility(R.id.textViewDebug, View.VISIBLE);
+                views.setTextViewText(R.id.textViewDebug, errorString);
+            }
+            appWidgetManager.updateAppWidget(appWidgetId, views);
         }
-        appWidgetManager.updateAppWidget(appWidgetId, views);
     }
 
     /**
@@ -197,7 +199,7 @@ public class MainWidget extends AppWidgetProvider {
     public void onReceive(Context context, Intent intent) {
         super.onReceive(context, intent);
 
-        if (intent.getAction().equals(Constants.WIDGET_REFRESH_BUTTON_ACTION)) {
+        if (Objects.equals(intent.getAction(), Constants.WIDGET_REFRESH_BUTTON_ACTION)) {
             int appWidgetId = intent.getIntExtra(Constants.APP_WIDGET_ID_EXTRA, Constants.INVALID_APP_WIDGET_ID);
             if (appWidgetId == Constants.INVALID_APP_WIDGET_ID) {
                 Log.e("OnReceive", "App widget ID was not passed with intent.");

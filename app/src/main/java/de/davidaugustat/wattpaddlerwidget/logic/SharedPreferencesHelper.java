@@ -145,7 +145,9 @@ public class SharedPreferencesHelper {
     public static TidesInfo getTidesCache(int appWidgetId, Context context) {
         SharedPreferences prefs = context.getSharedPreferences(CACHE_PREFS, Context.MODE_PRIVATE);
         String locId = prefs.getString(KEY_LOC_ID + appWidgetId, null);
-        if (locId == null) return null;
+        if (locId == null){
+            return null;
+        }
 
         String locName = prefs.getString(KEY_LOC_NAME + appWidgetId, "");
         LocalDate date = LocalDate.parse(prefs.getString(KEY_DATE + appWidgetId, ""));
