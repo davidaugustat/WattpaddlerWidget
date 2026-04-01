@@ -100,7 +100,7 @@ public class MainWidget extends AppWidgetProvider {
             Location location = SharedPreferencesHelper.getLocation(appWidgetId, context);
             new DataFetcher(context).fetchTidesDataSingleDay(location, tidesInfo -> {
                         updateWidgetLayout(views, context, appWidgetManager, appWidgetId, tidesInfo);
-                        Log.d("###", "Updated widget from refreshWidget. isManual: " + isManual);
+                        Log.d("Update Widget", "Updated widget from refreshWidget. isManual: " + isManual);
                         // Save the newly fetched data to the cache:
                         SharedPreferencesHelper.saveTidesCache(appWidgetId, context, tidesInfo);
 
@@ -140,7 +140,7 @@ public class MainWidget extends AppWidgetProvider {
         TidesInfo cachedTides = SharedPreferencesHelper.getTidesCache(appWidgetId, context);
         if (cachedTides != null) {
             updateWidgetLayout(views, context, appWidgetManager, appWidgetId, cachedTides);
-            Log.d("###", "Updated widget from locally cached info: " + cachedTides);
+            Log.d("Update Widget", "Updated widget from locally cached info: " + cachedTides);
         } else {
             if (Constants.SHOW_DEBUG) {
                 views.setViewVisibility(R.id.textViewDebug, View.VISIBLE);
